@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Project20050120</string>
+
+    <string name="title_activity_permission_rational">PermissionRationalActivity</string>
+    <string name="main_message_activity_permission_rational">Track activity changes by letting us read your phone\'s activity transitions.</string>
+    <string name="details_message_activity_permission_rational">This app\'s experience requires access to your phone\'s activity transitions to display changes from walking to standing still. And it also requires Storage permission to write logs.</string>
+    <string name="no_thanks_activity_permission_rational">No Thanks</string>
+    <string name="continue_activity_permission_rational">Continue</string>
+
+</resources>
