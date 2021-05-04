@@ -1,4 +1,4 @@
-package dev.debaleen.project20050120.activityRecognition
+package dev.debaleen.project20050120.activityRecognition.activityDetection
 
 import android.app.IntentService
 import android.content.Intent
@@ -29,20 +29,10 @@ class DetectedActivityIntentService : IntentService(TAG) {
             // device. Each activity is associated with a confidence level, which is an int between
             // 0 and 100.
             val detectedActivities = result?.probableActivities as ArrayList<DetectedActivity>
-            for (activity in detectedActivities) {
-//                broadcastActivity(activity)
+            for (activity in detectedActivities)
                 writeToLog(activity)
-            }
         }
     }
-
-//    private fun broadcastActivity(activity: DetectedActivity) {
-//        Log.i(TAG, "Broadcasting $activity")
-//        val intent = Intent(MainActivity.BROADCAST_DETECTED_ACTIVITY)
-//        intent.putExtra("type", activity.type)
-//        intent.putExtra("confidence", activity.confidence)
-//        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-//    }
 
     private fun writeToLog(activity: DetectedActivity) {
         if (activity.confidence > Constants.ACTIVITY_CONFIDENCE_THRESHOLD) {
@@ -50,11 +40,14 @@ class DetectedActivityIntentService : IntentService(TAG) {
                 try {
                     Log.i(TAG, "Writing to log..")
                     Log.i(TAG, getExternalFilesDir(null).toString())
-                    Log.i(TAG, "${SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US).format(Date())}, ${
-                        Constants.getActivityName(
-                            activity.type
-                        )
-                    }, ${activity.confidence}\n")
+                    Log.i(
+                        TAG,
+                        "${SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US).format(Date())}, ${
+                            Constants.getActivityName(
+                                activity.type
+                            )
+                        }, ${activity.confidence}\n"
+                    )
                     val file = File(getExternalFilesDir(null), "ActivityRecognitionLog.txt")
                     file.appendText(
                         "${SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US).format(Date())}, ${

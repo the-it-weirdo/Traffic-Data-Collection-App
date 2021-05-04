@@ -1,6 +1,5 @@
-package dev.debaleen.project20050120.activityRecognition
+package dev.debaleen.project20050120.activityRecognition.activityDetection
 
-import android.R
 import android.app.*
 import android.content.Intent
 import android.os.Binder
@@ -14,6 +13,8 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.ActivityRecognitionClient
 import dev.debaleen.project20050120.Constants
 import dev.debaleen.project20050120.MainActivity
+import dev.debaleen.project20050120.R
+import dev.debaleen.project20050120.activityRecognition.ActivityRecognitionServiceStoppedBroadcastReceiver
 
 
 class DetectActivitiesService : Service() {
@@ -26,8 +27,8 @@ class DetectActivitiesService : Service() {
             get() = _isServiceRunning
     }
 
-    private lateinit var mIntentService: Intent
-    private lateinit var mPendingIntent: PendingIntent
+    private lateinit var mIntentDetectedActivityService: Intent
+    private lateinit var mPendingIntentDetectedActivity: PendingIntent
     private lateinit var mActivityRecognitionClient: ActivityRecognitionClient
     private var mBinder: IBinder = LocalBinder()
 
@@ -39,13 +40,17 @@ class DetectActivitiesService : Service() {
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "onCreate")
-        _isServiceRunning.value = true
         createNotificationChannel()
         mActivityRecognitionClient = ActivityRecognitionClient(this)
-        mIntentService = Intent(this, DetectedActivityIntentService::class.java)
-        mPendingIntent =
-            PendingIntent.getService(this, 1, mIntentService, PendingIntent.FLAG_UPDATE_CURRENT)
-        requestActivityUpdatesButtonHandler()
+        mIntentDetectedActivityService = Intent(this, DetectedActivityIntentService::class.java)
+        mPendingIntentDetectedActivity =
+            PendingIntent.getService(
+                this,
+                1,
+                mIntentDetectedActivityService,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        requestActivityDetectionUpdates()
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -56,20 +61,33 @@ class DetectActivitiesService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         Log.i(TAG, "Start Command")
+        /*
+          when the phone runs out of memory and kills the service before it finishes executing,
+          START_STICKY tells the OS to recreate the service after it has enough memory and call
+          onStartCommand() again with a null intent.
+        */
+        return START_STICKY
+    }
+
+    private fun sendNotification() {
         val notificationIntent = Intent(this, MainActivity::class.java)
+        /*
+           flag = 0 means no flag in PendingIntent.
+           Setting no flags, i.e. 0 as the flags parameter, is to return an existing PendingIntent
+           if there is one that matches the parameters provided.
+           If there is no existing matching PendingIntent then a new one will be created and returned
+        */
         val pendingIntent = PendingIntent.getActivity(
-            this,
-            0, notificationIntent, 0
+            this, 0, notificationIntent, 0
         )
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Service is Running")
             .setContentText("Listening for Activity Recognition events")
-            .setSmallIcon(R.mipmap.sym_def_app_icon)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
-            .setColor(getColor(R.color.background_dark))
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
         startForeground(1, notification)
-        return START_STICKY
     }
 
     private fun createNotificationChannel() {
@@ -80,17 +98,15 @@ class DetectActivitiesService : Service() {
                 appName,
                 NotificationManager.IMPORTANCE_DEFAULT
             )
-            val manager = getSystemService(
-                NotificationManager::class.java
-            )
+            val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(serviceChannel)
         }
     }
 
-    private fun requestActivityUpdatesButtonHandler() {
+    private fun requestActivityDetectionUpdates() {
         val task = mActivityRecognitionClient.requestActivityUpdates(
             Constants.DETECTION_INTERVAL_IN_MILLISECONDS,
-            mPendingIntent
+            mPendingIntentDetectedActivity
         )
         task.addOnCompleteListener {
             Log.i(TAG, "Start task completed. Successful: ${it.isSuccessful}")
@@ -98,17 +114,19 @@ class DetectActivitiesService : Service() {
                 applicationContext,
                 "Start task completed. Successful: ${it.isSuccessful}",
                 Toast.LENGTH_SHORT
-            )
-                .show()
+            ).show()
         }
         task.addOnSuccessListener {
             Log.i(TAG, "Successfully requested activity updates")
+
+            _isServiceRunning.value = true
+            sendNotification()
+
             Toast.makeText(
                 applicationContext,
                 "Successfully requested activity updates",
                 Toast.LENGTH_SHORT
-            )
-                .show()
+            ).show()
         }
         task.addOnFailureListener {
             Log.i(TAG, "Requesting activity updates failed to start. $it")
@@ -116,14 +134,13 @@ class DetectActivitiesService : Service() {
                 applicationContext,
                 "Requesting activity updates failed to start. $it",
                 Toast.LENGTH_SHORT
-            )
-                .show()
+            ).show()
         }
     }
 
-    private fun removeActivityUpdatesButtonHandler() {
+    private fun removeActivityDetectionUpdates() {
         val task = mActivityRecognitionClient.removeActivityUpdates(
-            mPendingIntent
+            mPendingIntentDetectedActivity
         )
         task.addOnCompleteListener {
             Log.i(TAG, "Stop task completed. Successful: ${it.isSuccessful}")
@@ -131,8 +148,7 @@ class DetectActivitiesService : Service() {
                 applicationContext,
                 "Stop task completed. Successful: ${it.isSuccessful}",
                 Toast.LENGTH_SHORT
-            )
-                .show()
+            ).show()
         }
         task.addOnSuccessListener {
             Log.i(TAG, "Removed activity updates successfully!")
@@ -140,8 +156,7 @@ class DetectActivitiesService : Service() {
                 applicationContext,
                 "Removed activity updates successfully!",
                 Toast.LENGTH_SHORT
-            )
-                .show()
+            ).show()
         }
         task.addOnFailureListener {
             Log.i(TAG, "Failed to remove activity updates! $it")
@@ -155,7 +170,7 @@ class DetectActivitiesService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         _isServiceRunning.value = false
-        removeActivityUpdatesButtonHandler()
+        removeActivityDetectionUpdates()
         if (!MainActivity.KillRequestFromMainActivity) {
             // If the service is not killed from MainActivity, send broadcast to restart it.
             val intent =

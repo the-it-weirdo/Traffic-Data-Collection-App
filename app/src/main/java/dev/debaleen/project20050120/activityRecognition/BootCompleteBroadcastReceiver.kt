@@ -25,8 +25,7 @@ class BootCompleteBroadcastReceiver : BroadcastReceiver() {
             val workManager = WorkManager.getInstance(context)
             val startActivityRecServiceReq = OneTimeWorkRequest.Builder(
                 ActivityRecognitionServiceStarterWorker::class.java
-            )
-                .build()
+            ).build()
             workManager.enqueue(startActivityRecServiceReq)
         }
     }

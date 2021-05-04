@@ -9,18 +9,15 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import dev.debaleen.project20050120.activityRecognition.DetectActivitiesService
+import dev.debaleen.project20050120.activityRecognition.activityDetection.DetectActivitiesService
 import dev.debaleen.project20050120.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        const val BROADCAST_DETECTED_ACTIVITY = "activity_intent"
         var KillRequestFromMainActivity: Boolean = false
         private val TAG = MainActivity::class.java.simpleName
     }
-
-//    internal lateinit var broadcastReceiver: BroadcastReceiver
 
     private val runningQOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
@@ -46,33 +43,7 @@ class MainActivity : AppCompatActivity() {
                 binding.startStopBtn.text = if (it) "Stop" else "Start"
             }
         )
-
-//        broadcastReceiver = object : BroadcastReceiver() {
-//            override fun onReceive(context: Context, intent: Intent) {
-//                Log.i(TAG, "Broadcast Receiver onReceive")
-//                if (intent.action == MainActivity.BROADCAST_DETECTED_ACTIVITY) {
-//                    val type = intent.getIntExtra("type", -1)
-//                    val confidence = intent.getIntExtra("confidence", 0)
-//                    handleUserActivity(type, confidence)
-//                }
-//            }
-//        }
     }
-
-//    override fun onResume() {
-//        super.onResume()
-//        Log.i(TAG, "onResume")
-////        LocalBroadcastManager.getInstance(this).registerReceiver(
-////            broadcastReceiver,
-////            IntentFilter(BROADCAST_DETECTED_ACTIVITY)
-////        )
-//    }
-
-//    override fun onPause() {
-//        super.onPause()
-//        Log.i(TAG, "onPause")
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
-//    }
 
     private fun startStop() {
         Log.i(TAG, "startStop")
@@ -120,13 +91,4 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
-
-
-//    private fun handleUserActivity(type: Int, confidence: Int) {
-//        Log.i(TAG, "User activity: ${Constants.getActivityName(type)}, Confidence: $confidence")
-//        if (confidence > MainActivity.CONFIDENCE) {
-//            binding.txtDetectedActivity.text =
-//                "${binding.txtDetectedActivity.text}${Constants.getActivityName(type)} $confidence\n"
-//        }
-//    }
 }

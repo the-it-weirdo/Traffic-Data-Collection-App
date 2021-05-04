@@ -36,15 +36,17 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".activityRecognition.DetectActivitiesService"
+        <service android:name="dev.debaleen.project20050120.activityRecognition.activityDetection.DetectActivitiesService"
+            android:foregroundServiceType="dataSync"
             android:enabled="true"/>
-        <service android:name=".activityRecognition.DetectedActivityIntentService"
+        <service android:name="dev.debaleen.project20050120.activityRecognition.activityDetection.DetectedActivityIntentService"
+            android:foregroundServiceType="dataSync"
             android:enabled="true"/>
-        <receiver android:name=".activityRecognition.ActivityRecognitionServiceStoppedBroadcastReceiver"
+        <receiver android:name="dev.debaleen.project20050120.activityRecognition.ActivityRecognitionServiceStoppedBroadcastReceiver"
             android:enabled="true"
             android:exported="false"/>
 
-        <receiver android:name=".activityRecognition.BootCompleteBroadcastReceiver"
+        <receiver android:name="dev.debaleen.project20050120.activityRecognition.BootCompleteBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

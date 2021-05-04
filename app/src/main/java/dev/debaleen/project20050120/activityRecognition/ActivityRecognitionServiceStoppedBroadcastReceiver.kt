@@ -19,8 +19,8 @@ class ActivityRecognitionServiceStoppedBroadcastReceiver : BroadcastReceiver() {
         if (context != null) {
             val workManager = WorkManager.getInstance(context)
             val startActivityRecServiceReq = OneTimeWorkRequest.Builder(
-                ActivityRecognitionServiceStarterWorker::class.java)
-                .build()
+                ActivityRecognitionServiceStarterWorker::class.java
+            ).build()
             workManager.enqueue(startActivityRecServiceReq)
         }
     }

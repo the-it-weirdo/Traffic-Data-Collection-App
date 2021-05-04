@@ -6,10 +6,8 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import java.util.*
 
 class PermissionRationalActivity : AppCompatActivity(),
     ActivityCompat.OnRequestPermissionsResultCallback {

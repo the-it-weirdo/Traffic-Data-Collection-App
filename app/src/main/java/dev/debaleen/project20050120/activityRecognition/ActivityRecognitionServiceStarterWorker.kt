@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import dev.debaleen.project20050120.activityRecognition.activityDetection.DetectActivitiesService
 
 class ActivityRecognitionServiceStarterWorker(private val context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
