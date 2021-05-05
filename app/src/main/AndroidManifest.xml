@@ -9,9 +9,11 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 
     <application
@@ -38,19 +40,28 @@
 
         <service android:name="dev.debaleen.project20050120.activityRecognition.activityDetection.DetectActivitiesService"
             android:foregroundServiceType="dataSync"
-            android:enabled="true"/>
-        <service android:name="dev.debaleen.project20050120.activityRecognition.activityDetection.DetectedActivityIntentService"
+            android:enabled="true" />
+        <service
+            android:name="dev.debaleen.project20050120.activityRecognition.activityDetection.DetectedActivityIntentService"
             android:foregroundServiceType="dataSync"
-            android:enabled="true"/>
-        <receiver android:name="dev.debaleen.project20050120.activityRecognition.ActivityRecognitionServiceStoppedBroadcastReceiver"
-            android:enabled="true"
-            android:exported="false"/>
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:enabled="true" />
 
-        <receiver android:name="dev.debaleen.project20050120.activityRecognition.BootCompleteBroadcastReceiver"
+        <receiver
+            android:name="dev.debaleen.project20050120.activityRecognition.ActivityRecognitionServiceStoppedBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
+        <receiver
+            android:name=".activityRecognition.activityDetection.DetectedActivityBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name="dev.debaleen.project20050120.activityRecognition.BootCompleteBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
             </intent-filter>
         </receiver>

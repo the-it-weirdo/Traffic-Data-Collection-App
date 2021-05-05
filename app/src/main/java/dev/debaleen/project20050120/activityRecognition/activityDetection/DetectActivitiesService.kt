@@ -22,12 +22,12 @@ class DetectActivitiesService : Service() {
     companion object {
         private val TAG = DetectActivitiesService::class.java.simpleName
         private const val CHANNEL_ID = "Activity Recognition"
-        private val _isServiceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
-        val isServiceRunning: LiveData<Boolean>
-            get() = _isServiceRunning
+        private val isServiceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
+        val IsServiceRunning: LiveData<Boolean>
+            get() = isServiceRunning
     }
 
-    private lateinit var mIntentDetectedActivityService: Intent
+    private lateinit var mIntentDetectedActivityBroadcastRcvr: Intent
     private lateinit var mPendingIntentDetectedActivity: PendingIntent
     private lateinit var mActivityRecognitionClient: ActivityRecognitionClient
     private var mBinder: IBinder = LocalBinder()
@@ -42,12 +42,13 @@ class DetectActivitiesService : Service() {
         Log.i(TAG, "onCreate")
         createNotificationChannel()
         mActivityRecognitionClient = ActivityRecognitionClient(this)
-        mIntentDetectedActivityService = Intent(this, DetectedActivityIntentService::class.java)
+        mIntentDetectedActivityBroadcastRcvr =
+            Intent(this, DetectedActivityBroadcastReceiver::class.java)
         mPendingIntentDetectedActivity =
-            PendingIntent.getService(
+            PendingIntent.getBroadcast(
                 this,
                 1,
-                mIntentDetectedActivityService,
+                mIntentDetectedActivityBroadcastRcvr,
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
         requestActivityDetectionUpdates()
@@ -92,10 +93,9 @@ class DetectActivitiesService : Service() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val appName = Constants.AppName
             val serviceChannel = NotificationChannel(
                 CHANNEL_ID,
-                appName,
+                Constants.AppName,
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             val manager = getSystemService(NotificationManager::class.java)
@@ -119,7 +119,7 @@ class DetectActivitiesService : Service() {
         task.addOnSuccessListener {
             Log.i(TAG, "Successfully requested activity updates")
 
-            _isServiceRunning.value = true
+            isServiceRunning.value = true
             sendNotification()
 
             Toast.makeText(
@@ -169,7 +169,7 @@ class DetectActivitiesService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        _isServiceRunning.value = false
+        isServiceRunning.value = false
         removeActivityDetectionUpdates()
         if (!MainActivity.KillRequestFromMainActivity) {
             // If the service is not killed from MainActivity, send broadcast to restart it.

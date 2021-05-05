@@ -21,13 +21,13 @@ class MainActivity : AppCompatActivity() {
 
     private val runningQOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var mBinding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        binding.startStopBtn.setOnClickListener {
+        mBinding.startStopBtn.setOnClickListener {
             // Request permission and start activity for result. If the permission is approved, we
             // want to make sure we start activity recognition tracking.
             if (appRequiredPermissionsApproved()) {
@@ -38,16 +38,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        DetectActivitiesService.isServiceRunning.observe(
+        DetectActivitiesService.IsServiceRunning.observe(
             this, {
-                binding.startStopBtn.text = if (it) "Stop" else "Start"
+                mBinding.startStopBtn.text = if (it) "Stop" else "Start"
             }
         )
     }
 
     private fun startStop() {
         Log.i(TAG, "startStop")
-        if (!DetectActivitiesService.isServiceRunning.value!!) enableActivityRecognition() else disableActivityRecognition()
+        if (!DetectActivitiesService.IsServiceRunning.value!!) enableActivityRecognition() else disableActivityRecognition()
     }
 
     private fun enableActivityRecognition() {
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         // Start activity recognition if the permission was approved.
-        if (appRequiredPermissionsApproved() && !DetectActivitiesService.isServiceRunning.value!!) {
+        if (appRequiredPermissionsApproved() && !DetectActivitiesService.IsServiceRunning.value!!) {
             enableActivityRecognition()
         }
 

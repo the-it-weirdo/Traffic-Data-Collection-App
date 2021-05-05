@@ -1,8 +1,9 @@
 package dev.debaleen.project20050120.activityRecognition.activityDetection
 
-import android.app.IntentService
+import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.core.app.JobIntentService
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
 import dev.debaleen.project20050120.Constants
@@ -15,23 +16,26 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class DetectedActivityIntentService : IntentService(TAG) {
+class DetectedActivityIntentService : JobIntentService() {
 
     companion object {
         private val TAG = DetectedActivityIntentService::class.java.simpleName
+        fun enqueueWork(context: Context, intent: Intent) {
+            Log.i(TAG, "enqueueWork")
+            enqueueWork(context, DetectedActivityIntentService::class.java, 1, intent)
+        }
     }
 
-    override fun onHandleIntent(intent: Intent?) {
-        Log.i(TAG, "onHandleIntent")
-        if (intent != null) {
-            val result = ActivityRecognitionResult.extractResult(intent)
-            // Get the list of the probable activities associated with the current state of the
-            // device. Each activity is associated with a confidence level, which is an int between
-            // 0 and 100.
-            val detectedActivities = result?.probableActivities as ArrayList<DetectedActivity>
-            for (activity in detectedActivities)
-                writeToLog(activity)
-        }
+    override fun onHandleWork(intent: Intent) {
+        Log.i(TAG, "onHandleWork")
+        val result = ActivityRecognitionResult.extractResult(intent)
+        // Get the list of the probable activities associated with the current state of the
+        // device. Each activity is associated with a confidence level, which is an int between
+        // 0 and 100.
+        val detectedActivities = result?.probableActivities as ArrayList<DetectedActivity>
+        for (activity in detectedActivities)
+            writeToLog(activity)
+
     }
 
     private fun writeToLog(activity: DetectedActivity) {

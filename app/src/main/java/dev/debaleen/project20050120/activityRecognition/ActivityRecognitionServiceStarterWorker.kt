@@ -17,8 +17,8 @@ class ActivityRecognitionServiceStarterWorker(private val context: Context, work
 
     override fun doWork(): Result {
         Log.d(TAG, "doWork $id")
-        Log.d(TAG, "Service running: ${DetectActivitiesService.isServiceRunning.value}")
-        if(!DetectActivitiesService.isServiceRunning.value!!) {
+        Log.d(TAG, "Service running: ${DetectActivitiesService.IsServiceRunning.value}")
+        if (!DetectActivitiesService.IsServiceRunning.value!!) {
             Log.d(TAG, "Starting DetectActivitiesService")
             val intent = Intent(context, DetectActivitiesService::class.java)
             ContextCompat.startForegroundService(context, intent)
