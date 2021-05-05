@@ -1,5 +1,6 @@
 package dev.debaleen.project20050120
 
+import com.google.android.gms.location.ActivityTransition
 import com.google.android.gms.location.DetectedActivity
 
 class Constants {
@@ -10,6 +11,16 @@ class Constants {
         const val DETECTION_INTERVAL_IN_MILLISECONDS: Long = 60000 // 1 minute interval
 
         const val ACTIVITY_CONFIDENCE_THRESHOLD = 70
+
+        const val PopupNotificationActivity =
+            DetectedActivity.WALKING // change to IN_VEHICLE before release
+
+        const val PopupNotificationActivityTransition = ActivityTransition.ACTIVITY_TRANSITION_EXIT
+
+        val ActivityTransitionList = listOf<ActivityTransition>(
+            ActivityTransition.Builder().setActivityType(PopupNotificationActivity)
+                .setActivityTransition(PopupNotificationActivityTransition).build()
+        )
 
         fun getActivityName(type: Int): String {
             return when (type) {
@@ -22,6 +33,14 @@ class Constants {
                 DetectedActivity.WALKING -> "WALKING"
                 DetectedActivity.UNKNOWN -> "UNKNOWN"
                 else -> "UNCLASSIFIED"
+            }
+        }
+
+        fun getActivityTransitionName(type: Int): String {
+            return when (type) {
+                ActivityTransition.ACTIVITY_TRANSITION_ENTER -> "Enter"
+                ActivityTransition.ACTIVITY_TRANSITION_EXIT -> "Exit"
+                else -> "UNKNOWN"
             }
         }
     }

@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import dev.debaleen.project20050120.activityRecognition.activityDetection.DetectActivitiesService
 
 class ActivityRecognitionServiceStarterWorker(private val context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
@@ -17,10 +16,10 @@ class ActivityRecognitionServiceStarterWorker(private val context: Context, work
 
     override fun doWork(): Result {
         Log.d(TAG, "doWork $id")
-        Log.d(TAG, "Service running: ${DetectActivitiesService.IsServiceRunning.value}")
-        if (!DetectActivitiesService.IsServiceRunning.value!!) {
-            Log.d(TAG, "Starting DetectActivitiesService")
-            val intent = Intent(context, DetectActivitiesService::class.java)
+        Log.d(TAG, "Service running: ${ActivitiesService.IsServiceRunning.value}")
+        if (!ActivitiesService.IsServiceRunning.value!!) {
+            Log.d(TAG, "Starting ActivitiesService")
+            val intent = Intent(context, ActivitiesService::class.java)
             ContextCompat.startForegroundService(context, intent)
         }
         return Result.success()

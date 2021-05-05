@@ -9,7 +9,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import dev.debaleen.project20050120.activityRecognition.activityDetection.DetectActivitiesService
+import dev.debaleen.project20050120.activityRecognition.ActivitiesService
 import dev.debaleen.project20050120.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        DetectActivitiesService.IsServiceRunning.observe(
+        ActivitiesService.IsServiceRunning.observe(
             this, {
                 mBinding.startStopBtn.text = if (it) "Stop" else "Start"
             }
@@ -47,26 +47,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun startStop() {
         Log.i(TAG, "startStop")
-        if (!DetectActivitiesService.IsServiceRunning.value!!) enableActivityRecognition() else disableActivityRecognition()
+        if (!ActivitiesService.IsServiceRunning.value!!) enableActivityRecognition() else disableActivityRecognition()
     }
 
     private fun enableActivityRecognition() {
         Log.i(TAG, "Enabling Recognition..")
         KillRequestFromMainActivity = false
-        val intent = Intent(this@MainActivity, DetectActivitiesService::class.java)
+        val intent = Intent(this@MainActivity, ActivitiesService::class.java)
         startForegroundService(intent)
     }
 
     private fun disableActivityRecognition() {
         Log.i(TAG, "Disabling Recognition..")
         KillRequestFromMainActivity = true
-        val intent = Intent(this@MainActivity, DetectActivitiesService::class.java)
+        val intent = Intent(this@MainActivity, ActivitiesService::class.java)
         stopService(intent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         // Start activity recognition if the permission was approved.
-        if (appRequiredPermissionsApproved() && !DetectActivitiesService.IsServiceRunning.value!!) {
+        if (appRequiredPermissionsApproved() && !ActivitiesService.IsServiceRunning.value!!) {
             enableActivityRecognition()
         }
 

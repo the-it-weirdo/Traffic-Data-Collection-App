@@ -1,4 +1,4 @@
-package dev.debaleen.project20050120.activityRecognition.activityDetection
+package dev.debaleen.project20050120.activityRecognition
 
 import android.app.*
 import android.content.Intent
@@ -11,47 +11,65 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.ActivityRecognitionClient
+import com.google.android.gms.location.ActivityTransitionRequest
 import dev.debaleen.project20050120.Constants
 import dev.debaleen.project20050120.MainActivity
 import dev.debaleen.project20050120.R
-import dev.debaleen.project20050120.activityRecognition.ActivityRecognitionServiceStoppedBroadcastReceiver
+import dev.debaleen.project20050120.activityRecognition.activityDetection.DetectedActivityBroadcastReceiver
+import dev.debaleen.project20050120.activityRecognition.activityTransition.ActivityTransitionedBroadcastReceiver
 
 
-class DetectActivitiesService : Service() {
+class ActivitiesService : Service() {
 
     companion object {
-        private val TAG = DetectActivitiesService::class.java.simpleName
+        private val TAG = ActivitiesService::class.java.simpleName
+        private const val ForegroundNotificationReqCode = 0
+        private const val DetectedActivityReqCode = 1
+        private const val ActivityTransitionedReqCode = 2
         private const val CHANNEL_ID = "Activity Recognition"
         private val isServiceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
         val IsServiceRunning: LiveData<Boolean>
             get() = isServiceRunning
     }
 
-    private lateinit var mIntentDetectedActivityBroadcastRcvr: Intent
-    private lateinit var mPendingIntentDetectedActivity: PendingIntent
+    private lateinit var mIntentDetectedActivityBroadcastRcvr: Intent // for Activity Detection
+    private lateinit var mIntentActivityTransitionedBroadcastRcvr: Intent // for Activity Transition
+
+    private lateinit var mPendingIntentDetectedActivity: PendingIntent // for Activity Detection
+    private lateinit var mPendingIntentActivityTransitioned: PendingIntent // for Activity Transition
+
     private lateinit var mActivityRecognitionClient: ActivityRecognitionClient
     private var mBinder: IBinder = LocalBinder()
 
     inner class LocalBinder : Binder() {
-        val serverInstance: DetectActivitiesService
-            get() = this@DetectActivitiesService
+        val serverInstance: ActivitiesService
+            get() = this@ActivitiesService
     }
 
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "onCreate")
+        isServiceRunning.value = true
         createNotificationChannel()
         mActivityRecognitionClient = ActivityRecognitionClient(this)
+
         mIntentDetectedActivityBroadcastRcvr =
             Intent(this, DetectedActivityBroadcastReceiver::class.java)
+        mIntentActivityTransitionedBroadcastRcvr =
+            Intent(this, ActivityTransitionedBroadcastReceiver::class.java)
+
         mPendingIntentDetectedActivity =
             PendingIntent.getBroadcast(
-                this,
-                1,
-                mIntentDetectedActivityBroadcastRcvr,
+                this, DetectedActivityReqCode, mIntentDetectedActivityBroadcastRcvr,
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
+        mPendingIntentActivityTransitioned = PendingIntent.getBroadcast(
+            this, ActivityTransitionedReqCode, mIntentActivityTransitionedBroadcastRcvr,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         requestActivityDetectionUpdates()
+        requestActivityTransitionUpdates()
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -79,7 +97,7 @@ class DetectActivitiesService : Service() {
            If there is no existing matching PendingIntent then a new one will be created and returned
         */
         val pendingIntent = PendingIntent.getActivity(
-            this, 0, notificationIntent, 0
+            this, ForegroundNotificationReqCode, notificationIntent, 0
         )
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Service is Running")
@@ -119,7 +137,6 @@ class DetectActivitiesService : Service() {
         task.addOnSuccessListener {
             Log.i(TAG, "Successfully requested activity updates")
 
-            isServiceRunning.value = true
             sendNotification()
 
             Toast.makeText(
@@ -167,10 +184,81 @@ class DetectActivitiesService : Service() {
         }
     }
 
+    private fun requestActivityTransitionUpdates() {
+        val task = mActivityRecognitionClient.requestActivityTransitionUpdates(
+            ActivityTransitionRequest(Constants.ActivityTransitionList),
+            mPendingIntentActivityTransitioned
+        )
+
+        task.addOnCompleteListener {
+            Log.i(
+                TAG,
+                "Activity Transition Update Request task completed. Successful: ${it.isSuccessful}"
+            )
+            Toast.makeText(
+                applicationContext,
+                "Activity Transition Update Request task completed. Successful: ${it.isSuccessful}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        task.addOnSuccessListener {
+            Log.i(TAG, "Successfully requested activity transition updates")
+
+            sendNotification()
+
+            Toast.makeText(
+                applicationContext,
+                "Successfully requested activity transition updates",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        task.addOnFailureListener {
+            Log.i(TAG, "Requesting activity transition updates failed to start. $it")
+            Toast.makeText(
+                applicationContext,
+                "Requesting activity transition updates failed to start. $it",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun removeActivityTransitionUpdates() {
+        val task = mActivityRecognitionClient.removeActivityTransitionUpdates(
+            mPendingIntentActivityTransitioned
+        )
+        task.addOnCompleteListener {
+            Log.i(
+                TAG,
+                "Stop Activity Transition updates task completed. Successful: ${it.isSuccessful}"
+            )
+            Toast.makeText(
+                applicationContext,
+                "Stop Activity Transition updates task completed. Successful: ${it.isSuccessful}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        task.addOnSuccessListener {
+            Log.i(TAG, "Stop Activity Transition updates successful!")
+            Toast.makeText(
+                applicationContext,
+                "Stop Activity Transition updates successful!",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        task.addOnFailureListener {
+            Log.i(TAG, "Failed to remove Activity Transition updates! $it")
+            Toast.makeText(
+                applicationContext, "Failed to remove Activity Transition updates! $it",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         isServiceRunning.value = false
         removeActivityDetectionUpdates()
+        removeActivityTransitionUpdates()
         if (!MainActivity.KillRequestFromMainActivity) {
             // If the service is not killed from MainActivity, send broadcast to restart it.
             val intent =

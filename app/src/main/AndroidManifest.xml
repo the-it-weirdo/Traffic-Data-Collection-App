@@ -38,14 +38,20 @@
             </intent-filter>
         </activity>
 
-        <service android:name="dev.debaleen.project20050120.activityRecognition.activityDetection.DetectActivitiesService"
-            android:foregroundServiceType="dataSync"
-            android:enabled="true" />
+        <service
+            android:name="dev.debaleen.project20050120.activityRecognition.ActivitiesService"
+            android:enabled="true"
+            android:foregroundServiceType="dataSync" />
         <service
             android:name="dev.debaleen.project20050120.activityRecognition.activityDetection.DetectedActivityIntentService"
+            android:enabled="true"
             android:foregroundServiceType="dataSync"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:enabled="true" />
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".activityRecognition.activityTransition.ActivityTransitionedIntentService"
+            android:enabled="true"
+            android:foregroundServiceType="dataSync"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
             android:name="dev.debaleen.project20050120.activityRecognition.ActivityRecognitionServiceStoppedBroadcastReceiver"
@@ -53,6 +59,10 @@
             android:exported="false" />
         <receiver
             android:name=".activityRecognition.activityDetection.DetectedActivityBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
+        <receiver
+            android:name=".activityRecognition.activityTransition.ActivityTransitionedBroadcastReceiver"
             android:enabled="true"
             android:exported="false" />
 
