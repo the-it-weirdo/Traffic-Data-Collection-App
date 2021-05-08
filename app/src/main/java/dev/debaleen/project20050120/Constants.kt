@@ -45,3 +45,11 @@ class Constants {
         }
     }
 }
+
+enum class VehicleType {
+    BUS, CAB, TWO_WHEELER, THREE_WHEELER, FOUR_WHEELER, TWO_WHEELER_WITH_ENGINE, THREE_WHEELER_WITH_ENGINE
+}
+
+enum class BusStopType {
+    ADHOC, CONGESTION, SIGNAL, BUS_STOP
+}

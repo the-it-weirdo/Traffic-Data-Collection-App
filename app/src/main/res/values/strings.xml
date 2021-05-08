@@ -6,5 +6,23 @@
     <string name="details_message_activity_permission_rational">This app\'s experience requires access to your phone\'s activity transitions to display changes from walking to standing still. And it also requires Storage permission to write logs.</string>
     <string name="no_thanks_activity_permission_rational">No Thanks</string>
     <string name="continue_activity_permission_rational">Continue</string>
+    <string name="stop_information_title">Stop Information</string>
+    <string name="vehicle_type_title">Vehicle Type</string>
+    <string name="bus">Bus</string>
+    <string name="cab">Cab</string>
+    <string name="two_wheeler">Two Wheeler</string>
+    <string name="four_wheeler">Four Wheeler</string>
+    <string name="three_wheeler">Three Wheeler</string>
+    <string name="two_wheeler_with_motor_engine">Two Wheeler with Motor/Engine</string>
+    <string name="three_wheeler_with_motor_engine">Three Wheeler with Motor/Engine</string>
+    <string name="did_you_get_off_the_vehicle_title">Did you get off the vehicle ?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="type_of_stop_title">Type of Stop</string>
+    <string name="signal">Signal</string>
+    <string name="adhoc">Adhoc</string>
+    <string name="congestion">Congestion</string>
+    <string name="regular_stop">Regular Stop</string>
+    <string name="submit">Submit</string>
 
 </resources>

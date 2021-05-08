@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.debaleen.project20050120">
-
     <!-- Required for 28 and below. -->
-    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
-    <!-- Required for 29+. -->
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" /> <!-- Required for 29+. -->
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
 
     <application
         android:allowBackup="true"
@@ -24,12 +17,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project20050120">
-
+        <activity android:name=".StopInformationFormActivity"></activity>
         <activity
             android:name=".PermissionRationalActivity"
             android:label="@string/title_activity_permission_rational"
             android:launchMode="singleTop" />
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,11 +31,11 @@
         </activity>
 
         <service
-            android:name="dev.debaleen.project20050120.activityRecognition.ActivitiesService"
+            android:name=".activityRecognition.ActivitiesService"
             android:enabled="true"
             android:foregroundServiceType="dataSync" />
         <service
-            android:name="dev.debaleen.project20050120.activityRecognition.activityDetection.DetectedActivityIntentService"
+            android:name=".activityRecognition.activityDetection.DetectedActivityIntentService"
             android:enabled="true"
             android:foregroundServiceType="dataSync"
             android:permission="android.permission.BIND_JOB_SERVICE" />
@@ -54,7 +46,7 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
-            android:name="dev.debaleen.project20050120.activityRecognition.ActivityRecognitionServiceStoppedBroadcastReceiver"
+            android:name=".activityRecognition.ActivityRecognitionServiceStoppedBroadcastReceiver"
             android:enabled="true"
             android:exported="false" />
         <receiver
@@ -65,9 +57,8 @@
             android:name=".activityRecognition.activityTransition.ActivityTransitionedBroadcastReceiver"
             android:enabled="true"
             android:exported="false" />
-
         <receiver
-            android:name="dev.debaleen.project20050120.activityRecognition.BootCompleteBroadcastReceiver"
+            android:name=".activityRecognition.BootCompleteBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
