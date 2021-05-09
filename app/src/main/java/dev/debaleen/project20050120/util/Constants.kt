@@ -1,4 +1,4 @@
-package dev.debaleen.project20050120
+package dev.debaleen.project20050120.util
 
 import com.google.android.gms.location.ActivityTransition
 import com.google.android.gms.location.DetectedActivity

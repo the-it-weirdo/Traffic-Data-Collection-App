@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.core.app.JobIntentService
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
-import dev.debaleen.project20050120.Constants
+import dev.debaleen.project20050120.util.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -8,239 +8,264 @@
 
         <variable
             name="viewModel"
-            type="dev.debaleen.project20050120.StopInformationFormViewModel" />
+            type="dev.debaleen.project20050120.viewmodels.StopInformationFormViewModel" />
 
-        <variable
-            name="VehicleType"
-            type="dev.debaleen.project20050120.VehicleType" />
+        <import type="dev.debaleen.project20050120.util.BusStopType" />
 
-        <variable
-            name="BusStopType"
-            type="dev.debaleen.project20050120.BusStopType" />
+        <import type="dev.debaleen.project20050120.util.VehicleType" />
     </data>
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:elevation="8dp"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/form_title"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/stop_information_title"
-                android:textAlignment="center"
-                android:textSize="35sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/vehicle_type_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/vehicle_type_title"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/form_title" />
+                <TextView
+                    android:id="@+id/form_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/stop_information_title"
+                    android:textAlignment="center"
+                    android:textSize="35sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <RadioGroup
-                android:id="@+id/vehicle_type_radio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:checkedButton="@{viewModel.vehicleRadioChecked}"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vehicle_type_title">
+                <TextView
+                    android:id="@+id/vehicle_type_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/vehicle_type_title"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/form_title" />
 
-                <RadioButton
-                    android:id="@+id/vehicle_type_bus"
+                <RadioGroup
+                    android:id="@+id/vehicle_type_radio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:checkedButton="@={viewModel.vehicleRadioChecked}"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vehicle_type_title">
+
+                    <RadioButton
+                        android:id="@+id/vehicle_type_bus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:onClick="@{() -> viewModel.onVehicleTypeChange(VehicleType.BUS)}"
+                        android:text="@string/bus"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/vehicle_type_cab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.CAB)}"
+                        android:text="@string/cab"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/vehicle_type_two_wheeler"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.TWO_WHEELER)}"
+                        android:text="@string/two_wheeler"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/vehicle_type_three_wheeler"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.THREE_WHEELER)}"
+                        android:text="@string/three_wheeler"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/vehicle_type_four_wheeler"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.FOUR_WHEELER)}"
+                        android:text="@string/four_wheeler"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/vehicle_type_two_wheeler_with_engine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.TWO_WHEELER_WITH_ENGINE)}"
+                        android:text="@string/two_wheeler_with_motor_engine"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/vehicle_type_three_wheeler_with_engine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.THREE_WHEELER_WITH_ENGINE)}"
+                        android:text="@string/three_wheeler_with_motor_engine"
+                        android:textSize="16sp" />
+
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/disembark_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/did_you_get_off_the_vehicle_title"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vehicle_type_radio" />
+
+                <RadioGroup
+                    android:id="@+id/disembark_radio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:checkedButton="@={viewModel.disembarkRadioChecked}"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/disembark_title">
+
+                    <RadioButton
+                        android:id="@+id/disembark_true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:onClick="@{() -> viewModel.onDisembarkChange(true)}"
+                        android:text="@string/yes"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/disembark_false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:onClick="@{() -> viewModel.onDisembarkChange(false)}"
+                        android:text="@string/no"
+                        android:textSize="16sp" />
+
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/type_of_stop_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/type_of_stop_title"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/disembark_radio" />
+
+                <LinearLayout
+                    android:id="@+id/type_of_stop_radio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/type_of_stop_title">
+
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:flexDirection="row"
+                        app:flexWrap="wrap">
+
+                        <CheckBox
+                            android:id="@+id/type_of_stop_signal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:checked="@{viewModel.stopTypes.contains(BusStopType.SIGNAL)}"
+                            android:onClick="@{() -> viewModel.onStopTypeChange(BusStopType.SIGNAL)}"
+                            android:text="@string/signal"
+                            android:textSize="16sp" />
+
+                        <CheckBox
+                            android:id="@+id/type_of_stop_adhoc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:checked="@{viewModel.stopTypes.contains(BusStopType.ADHOC)}"
+                            android:onClick="@{() -> viewModel.onStopTypeChange(BusStopType.ADHOC)}"
+                            android:text="@string/adhoc"
+                            android:textSize="16sp" />
+
+                        <CheckBox
+                            android:id="@+id/type_of_stop_congestion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:checked="@{viewModel.stopTypes.contains(BusStopType.CONGESTION)}"
+                            android:onClick="@{() -> viewModel.onStopTypeChange(BusStopType.CONGESTION)}"
+                            android:text="@string/congestion"
+                            android:textSize="16sp" />
+
+                        <CheckBox
+                            android:id="@+id/type_of_stop_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:checked="@{viewModel.stopTypes.contains(BusStopType.BUS_STOP)}"
+                            android:onClick="@{() -> viewModel.onStopTypeChange(BusStopType.BUS_STOP)}"
+                            android:text="@string/regular_stop"
+                            android:textSize="16sp" />
+
+
+                    </com.google.android.flexbox.FlexboxLayout>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnSubmit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:onClick="@{() -> viewModel.onVehicleTypeChange(VehicleType.BUS)}"
-                    android:text="@string/bus"
-                    android:textSize="24sp" />
-
-                <RadioButton
-                    android:id="@+id/vehicle_type_cab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.CAB)}"
-                    android:text="@string/cab"
-                    android:textSize="24sp" />
-
-                <RadioButton
-                    android:id="@+id/vehicle_type_two_wheeler"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.TWO_WHEELER)}"
-                    android:text="@string/two_wheeler"
-                    android:textSize="24sp" />
-
-                <RadioButton
-                    android:id="@+id/vehicle_type_three_wheeler"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.THREE_WHEELER)}"
-                    android:text="@string/three_wheeler"
-                    android:textSize="24sp" />
-
-                <RadioButton
-                    android:id="@+id/vehicle_type_four_wheeler"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.FOUR_WHEELER)}"
-                    android:text="@string/four_wheeler"
-                    android:textSize="24sp" />
-
-                <RadioButton
-                    android:id="@+id/vehicle_type_two_wheeler_with_engine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.TWO_WHEELER_WITH_ENGINE)}"
-                    android:text="@string/two_wheeler_with_motor_engine"
-                    android:textSize="24sp" />
-
-                <RadioButton
-                    android:id="@+id/vehicle_type_three_wheeler_with_engine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:onClick="@{()->viewModel.onVehicleTypeChange(VehicleType.THREE_WHEELER_WITH_ENGINE)}"
-                    android:text="@string/three_wheeler_with_motor_engine"
-                    android:textSize="24sp" />
-
-            </RadioGroup>
-
-            <TextView
-                android:id="@+id/disembark_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/did_you_get_off_the_vehicle_title"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vehicle_type_radio" />
-
-            <RadioGroup
-                android:id="@+id/disembark_radio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/disembark_title">
-
-                <RadioButton
-                    android:id="@+id/disembark_true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="@string/yes"
-                    android:textSize="24sp" />
-
-                <RadioButton
-                    android:id="@+id/disembark_false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="@string/no"
-                    android:textSize="24sp" />
-
-            </RadioGroup>
-
-            <TextView
-                android:id="@+id/type_of_stop_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/type_of_stop_title"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/disembark_radio" />
-
-            <RadioGroup
-                android:id="@+id/type_of_stop_radio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:checkedButton="@{viewModel.stopTypeChecked}"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/type_of_stop_title">
-
-                <RadioButton
-                    android:id="@+id/type_of_stop_signal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:onClick="@{() -> viewModel.onStopTypeChange(BusStopType.SIGNAL)}"
-                    android:text="@string/signal"
-                    android:textSize="24sp" />
-
-                <RadioButton
-                    android:id="@+id/type_of_stop_adhoc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:onClick="@{() -> viewModel.onStopTypeChange(BusStopType.ADHOC)}"
-                    android:text="@string/adhoc"
-                    android:textSize="24sp" />
-
-                <RadioButton
-                    android:id="@+id/type_of_stop_congestion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:onClick="@{() -> viewModel.onStopTypeChange(BusStopType.CONGESTION)}"
-                    android:text="@string/congestion"
-                    android:textSize="24sp" />
-
-                <RadioButton
-                    android:id="@+id/type_of_stop_regular"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:onClick="@{() -> viewModel.onStopTypeChange(BusStopType.BUS_STOP)}"
-                    android:text="@string/regular_stop"
-                    android:textSize="24sp" />
-
-            </RadioGroup>
-
-            <Button
-                android:id="@+id/btnSubmit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/submit"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/type_of_stop_radio" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+                    android:layout_margin="8dp"
+                    android:text="@string/submit"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/type_of_stop_radio" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </RelativeLayout>
 </layout>

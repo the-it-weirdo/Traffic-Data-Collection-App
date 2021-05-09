@@ -11,9 +11,9 @@ import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.location.ActivityTransitionResult
-import dev.debaleen.project20050120.Constants
-import dev.debaleen.project20050120.MainActivity
+import dev.debaleen.project20050120.util.Constants
 import dev.debaleen.project20050120.R
+import dev.debaleen.project20050120.StopInformationFormActivity
 
 class ActivityTransitionedIntentService : JobIntentService() {
 
@@ -67,7 +67,7 @@ class ActivityTransitionedIntentService : JobIntentService() {
     }
 
     private fun sendNotification(contentText: String) {
-        val notificationIntent = Intent(this, MainActivity::class.java)
+        val notificationIntent = Intent(this, StopInformationFormActivity::class.java)
         /*
            flag = 0 means no flag in PendingIntent.
            Setting no flags, i.e. 0 as the flags parameter, is to return an existing PendingIntent
@@ -80,11 +80,12 @@ class ActivityTransitionedIntentService : JobIntentService() {
         val notificationBuilder = NotificationCompat.Builder(
             this, CHANNEL_ID_NAME
         )
-            .setContentTitle("Detected activity transition")
+            .setContentTitle("Activity Transition Update")
             .setContentText(contentText)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(this)) {
             // notificationId is a unique int for each notification that you must define

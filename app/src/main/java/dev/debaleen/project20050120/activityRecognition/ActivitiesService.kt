@@ -12,7 +12,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.ActivityRecognitionClient
 import com.google.android.gms.location.ActivityTransitionRequest
-import dev.debaleen.project20050120.Constants
+import dev.debaleen.project20050120.util.Constants
 import dev.debaleen.project20050120.MainActivity
 import dev.debaleen.project20050120.R
 import dev.debaleen.project20050120.activityRecognition.activityDetection.DetectedActivityBroadcastReceiver
