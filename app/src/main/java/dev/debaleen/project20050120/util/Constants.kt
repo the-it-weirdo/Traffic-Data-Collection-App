@@ -1,5 +1,6 @@
 package dev.debaleen.project20050120.util
 
+import android.Manifest
 import com.google.android.gms.location.ActivityTransition
 import com.google.android.gms.location.DetectedActivity
 
@@ -9,6 +10,12 @@ class Constants {
         const val AppName = "Project20050120"
 
         const val DETECTION_INTERVAL_IN_MILLISECONDS: Long = 60000 // 1 minute interval
+
+        const val AUDIO_SAMPLING_RATE = 44100
+
+        const val NotificationChannelId = "dev.debaleen.project20050120"
+        const val GroupNotificationsId = 20050120
+        const val NotificationGroup = "Project 20050120"
 
         const val ACTIVITY_CONFIDENCE_THRESHOLD = 70
 

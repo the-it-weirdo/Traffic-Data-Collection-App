@@ -1,11 +1,8 @@
 package dev.debaleen.project20050120.activityRecognition.activityTransition
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
 import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
@@ -18,18 +15,14 @@ import dev.debaleen.project20050120.StopInformationFormActivity
 class ActivityTransitionedIntentService : JobIntentService() {
 
     companion object {
-        private const val CHANNEL_ID_NAME = "Activity Transition Updates"
+        const val CHANNEL_ID_NAME = "Activity Transition Updates"
         private val TAG = ActivityTransitionedIntentService::class.java.simpleName
         private const val ActivityRecognitionUpdateReqCode = 4
+        private const val ActivityRecognitionNotificationId = 4
         fun enqueueWork(context: Context, intent: Intent) {
             Log.i(TAG, "enqueueWork")
             enqueueWork(context, ActivityTransitionedIntentService::class.java, 2, intent)
         }
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        createNotificationChannel()
     }
 
     override fun onHandleWork(intent: Intent) {
@@ -50,20 +43,6 @@ class ActivityTransitionedIntentService : JobIntentService() {
             sendNotification(strBuffer.toString())
         }
 
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val activityTransitionUpdateChannel = NotificationChannel(
-                CHANNEL_ID_NAME, //Id
-                CHANNEL_ID_NAME, //Name
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            activityTransitionUpdateChannel.enableLights(true)
-            activityTransitionUpdateChannel.enableVibration(true)
-            val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(activityTransitionUpdateChannel)
-        }
     }
 
     private fun sendNotification(contentText: String) {
@@ -87,10 +66,8 @@ class ActivityTransitionedIntentService : JobIntentService() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
 
-        with(NotificationManagerCompat.from(this)) {
-            // notificationId is a unique int for each notification that you must define
-            // here notificationId = ActivityRecognitionUpdateReqCode
-            notify(ActivityRecognitionUpdateReqCode, notificationBuilder.build())
+        NotificationManagerCompat.from(this).apply {
+            notify(ActivityRecognitionNotificationId, notificationBuilder.build())
         }
     }
 }

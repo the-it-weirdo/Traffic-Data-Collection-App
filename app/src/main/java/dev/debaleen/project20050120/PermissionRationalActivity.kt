@@ -1,13 +1,13 @@
 package dev.debaleen.project20050120
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import dev.debaleen.project20050120.util.appRequiredPermissionsApproved
 
 class PermissionRationalActivity : AppCompatActivity(),
     ActivityCompat.OnRequestPermissionsResultCallback {
@@ -17,20 +17,13 @@ class PermissionRationalActivity : AppCompatActivity(),
     private val runningQOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     /* Id to identify Activity Recognition permission request. */
-    private val PERMISSION_REQUEST_ACTIVITY_RECOGNITION_AND_WRITE_EXTERNAL = 45
+    private val requiredPermissionsRequestId = 45
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // If permissions granted, we start the main activity (shut this activity down).
-        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
-                    == PackageManager.PERMISSION_GRANTED
-                    ) && (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-                    == PackageManager.PERMISSION_GRANTED)
-        ) {
+        if (appRequiredPermissionsApproved(runningQOrLater)) {
             finish()
         }
         setContentView(R.layout.activity_permission_rational)
@@ -39,21 +32,20 @@ class PermissionRationalActivity : AppCompatActivity(),
     fun onClickApprovePermissionRequest(view: View?) {
         Log.d(TAG, "onClickApprovePermissionRequest()")
 
+        val requiredPermissions = mutableListOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.RECORD_AUDIO
+        )
+
         // Review permission request for activity recognition.
-        if (runningQOrLater)
+        if (runningQOrLater) {
+            requiredPermissions.add(Manifest.permission.ACTIVITY_RECOGNITION)
             ActivityCompat.requestPermissions(
-                this, arrayOf(
-                    Manifest.permission.ACTIVITY_RECOGNITION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                PERMISSION_REQUEST_ACTIVITY_RECOGNITION_AND_WRITE_EXTERNAL
+                this, requiredPermissions.toTypedArray(), requiredPermissionsRequestId
             )
-        else
+        } else
             ActivityCompat.requestPermissions(
-                this, arrayOf(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                PERMISSION_REQUEST_ACTIVITY_RECOGNITION_AND_WRITE_EXTERNAL
+                this, requiredPermissions.toTypedArray(), requiredPermissionsRequestId
             )
     }
 
@@ -71,7 +63,7 @@ class PermissionRationalActivity : AppCompatActivity(),
         val permissionResult = "Request code: " + requestCode + ", Permissions: " +
                 permissions.contentToString() + ", Results: " + grantResults.contentToString()
         Log.d(TAG, "onRequestPermissionsResult(): $permissionResult")
-        if (requestCode == PERMISSION_REQUEST_ACTIVITY_RECOGNITION_AND_WRITE_EXTERNAL) {
+        if (requestCode == requiredPermissionsRequestId) {
             // Close activity regardless of user's decision (decision picked up in main activity).
             finish()
         }

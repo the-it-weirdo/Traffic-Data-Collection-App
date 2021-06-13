@@ -3,7 +3,6 @@ package dev.debaleen.project20050120.activityRecognition
 import android.app.*
 import android.content.Intent
 import android.os.Binder
-import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
@@ -24,9 +23,9 @@ class ActivitiesService : Service() {
     companion object {
         private val TAG = ActivitiesService::class.java.simpleName
         private const val ForegroundNotificationReqCode = 0
+        private const val ActivityRecognitionNotificationId = 1
         private const val DetectedActivityReqCode = 1
         private const val ActivityTransitionedReqCode = 2
-        private const val CHANNEL_ID = "Activity Recognition"
         private val isServiceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
         val IsServiceRunning: LiveData<Boolean>
             get() = isServiceRunning
@@ -50,7 +49,6 @@ class ActivitiesService : Service() {
         super.onCreate()
         Log.i(TAG, "onCreate")
         isServiceRunning.value = true
-        createNotificationChannel()
         mActivityRecognitionClient = ActivityRecognitionClient(this)
 
         mIntentDetectedActivityBroadcastRcvr =
@@ -99,27 +97,18 @@ class ActivitiesService : Service() {
         val pendingIntent = PendingIntent.getActivity(
             this, ForegroundNotificationReqCode, notificationIntent, 0
         )
-        val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Service is Running")
-            .setContentText("Listening for Activity Recognition events")
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .build()
-        startForeground(1, notification)
+        val notification: Notification =
+            NotificationCompat.Builder(this, Constants.NotificationChannelId)
+                .setContentTitle("Service is Running")
+                .setContentText("Listening for Activity Recognition events")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setGroup(Constants.NotificationGroup)
+                .build()
+        startForeground(ActivityRecognitionNotificationId, notification)
     }
 
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val serviceChannel = NotificationChannel(
-                CHANNEL_ID,
-                Constants.AppName,
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(serviceChannel)
-        }
-    }
 
     private fun requestActivityDetectionUpdates() {
         val task = mActivityRecognitionClient.requestActivityUpdates(
