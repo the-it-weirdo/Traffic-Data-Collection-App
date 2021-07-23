@@ -9,6 +9,8 @@ class Constants {
 
         const val AppName = "Project20050120"
 
+        const val BASE_DIR = "Data Crowd Sourcing"
+
         const val DETECTION_INTERVAL_IN_MILLISECONDS: Long = 60000 // 1 minute interval
 
         const val AUDIO_SAMPLING_RATE = 44100
