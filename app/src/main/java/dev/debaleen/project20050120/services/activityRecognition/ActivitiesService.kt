@@ -1,4 +1,4 @@
-package dev.debaleen.project20050120.activityRecognition
+package dev.debaleen.project20050120.services.activityRecognition
 
 import android.app.*
 import android.content.Intent
@@ -14,8 +14,8 @@ import com.google.android.gms.location.ActivityTransitionRequest
 import dev.debaleen.project20050120.util.Constants
 import dev.debaleen.project20050120.MainActivity
 import dev.debaleen.project20050120.R
-import dev.debaleen.project20050120.activityRecognition.activityDetection.DetectedActivityBroadcastReceiver
-import dev.debaleen.project20050120.activityRecognition.activityTransition.ActivityTransitionedBroadcastReceiver
+import dev.debaleen.project20050120.services.activityRecognition.activityDetection.DetectedActivityBroadcastReceiver
+import dev.debaleen.project20050120.services.activityRecognition.activityTransition.ActivityTransitionedBroadcastReceiver
 
 
 class ActivitiesService : Service() {

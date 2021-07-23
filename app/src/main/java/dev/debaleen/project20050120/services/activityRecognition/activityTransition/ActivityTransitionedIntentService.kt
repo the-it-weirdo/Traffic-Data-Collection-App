@@ -1,4 +1,4 @@
-package dev.debaleen.project20050120.activityRecognition.activityTransition
+package dev.debaleen.project20050120.services.activityRecognition.activityTransition
 
 import android.app.PendingIntent
 import android.content.Context

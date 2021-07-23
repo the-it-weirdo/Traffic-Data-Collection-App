@@ -11,9 +11,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MediatorLiveData
-import dev.debaleen.project20050120.activityRecognition.ActivitiesService
-import dev.debaleen.project20050120.activityRecognition.activityTransition.ActivityTransitionedIntentService
-import dev.debaleen.project20050120.audioRecording.AudioRecordingService
+import dev.debaleen.project20050120.services.activityRecognition.ActivitiesService
+import dev.debaleen.project20050120.services.activityRecognition.activityTransition.ActivityTransitionedIntentService
+import dev.debaleen.project20050120.services.audioRecording.AudioRecordingService
 import dev.debaleen.project20050120.databinding.ActivityMainBinding
 import dev.debaleen.project20050120.util.Constants
 import dev.debaleen.project20050120.util.appRequiredPermissionsApproved

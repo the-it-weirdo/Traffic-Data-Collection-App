@@ -34,37 +34,37 @@
         </activity>
 
         <service
-            android:name=".activityRecognition.ActivitiesService"
+            android:name="dev.debaleen.project20050120.services.activityRecognition.ActivitiesService"
             android:enabled="true"
             android:foregroundServiceType="dataSync" />
         <service
-            android:name=".audioRecording.AudioRecordingService"
+            android:name="dev.debaleen.project20050120.services.audioRecording.AudioRecordingService"
             android:enabled="true" />
         <service
-            android:name=".activityRecognition.activityDetection.DetectedActivityIntentService"
+            android:name="dev.debaleen.project20050120.services.activityRecognition.activityDetection.DetectedActivityIntentService"
             android:enabled="true"
             android:foregroundServiceType="dataSync"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".activityRecognition.activityTransition.ActivityTransitionedIntentService"
+            android:name="dev.debaleen.project20050120.services.activityRecognition.activityTransition.ActivityTransitionedIntentService"
             android:enabled="true"
             android:foregroundServiceType="dataSync"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
-            android:name=".activityRecognition.ActivityRecognitionServiceStoppedBroadcastReceiver"
+            android:name="dev.debaleen.project20050120.services.activityRecognition.ActivityRecognitionServiceStoppedBroadcastReceiver"
             android:enabled="true"
             android:exported="false" />
         <receiver
-            android:name=".activityRecognition.activityDetection.DetectedActivityBroadcastReceiver"
+            android:name="dev.debaleen.project20050120.services.activityRecognition.activityDetection.DetectedActivityBroadcastReceiver"
             android:enabled="true"
             android:exported="false" />
         <receiver
-            android:name=".activityRecognition.activityTransition.ActivityTransitionedBroadcastReceiver"
+            android:name="dev.debaleen.project20050120.services.activityRecognition.activityTransition.ActivityTransitionedBroadcastReceiver"
             android:enabled="true"
             android:exported="false" />
         <receiver
-            android:name=".activityRecognition.BootCompleteBroadcastReceiver"
+            android:name="dev.debaleen.project20050120.services.activityRecognition.BootCompleteBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

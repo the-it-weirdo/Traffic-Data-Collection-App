@@ -1,4 +1,4 @@
-package dev.debaleen.project20050120.audioRecording
+package dev.debaleen.project20050120.services.audioRecording
 
 import android.app.Notification
 import android.app.PendingIntent

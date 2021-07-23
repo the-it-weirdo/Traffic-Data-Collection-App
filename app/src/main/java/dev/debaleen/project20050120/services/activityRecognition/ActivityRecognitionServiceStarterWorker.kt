@@ -1,4 +1,4 @@
-package dev.debaleen.project20050120.activityRecognition
+package dev.debaleen.project20050120.services.activityRecognition
 
 import android.content.Context
 import android.content.Intent
