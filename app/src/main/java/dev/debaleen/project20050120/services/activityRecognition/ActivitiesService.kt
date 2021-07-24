@@ -32,8 +32,6 @@ class ActivitiesService : Service() {
             get() = isServiceRunning
     }
 
-    private val logger = FileLogger()
-
     private lateinit var mIntentDetectedActivityBroadcastRcvr: Intent // for Activity Detection
     private lateinit var mIntentActivityTransitionedBroadcastRcvr: Intent // for Activity Transition
 
@@ -56,6 +54,7 @@ class ActivitiesService : Service() {
         val fileName = "${
             Constants.getCurrentDateTime("dd-MM-yyyy_HH-mm-ss")
         }_${Constants.ACTIVITY_RECOGNITION_FILE}"
+        val logger = FileLogger(fileName, false)
 
         mActivityRecognitionClient = ActivityRecognitionClient(this)
 
@@ -77,8 +76,7 @@ class ActivitiesService : Service() {
         )
 
         try {
-            val file = logger.getOutputFile(fileName, false)
-            logger.writeToFile(file, "TIMESTAMP,ACTIVITY,CONFIDENCE\n")
+            logger.writeToFile("TIMESTAMP,ACTIVITY,CONFIDENCE\n")
         } catch (e: Exception) {
             Log.e(TAG, "Activity File creation failed", e)
         }

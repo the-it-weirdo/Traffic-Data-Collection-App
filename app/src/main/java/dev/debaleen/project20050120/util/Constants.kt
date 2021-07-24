@@ -1,6 +1,5 @@
 package dev.debaleen.project20050120.util
 
-import android.Manifest
 import com.google.android.gms.location.ActivityTransition
 import com.google.android.gms.location.DetectedActivity
 import java.text.SimpleDateFormat
@@ -13,6 +12,8 @@ class Constants {
 
         const val BASE_DIR = "Project20050120"
         const val ACTIVITY_RECOGNITION_FILE = "activity_recognition_log.txt"
+        const val AUDIO_RECORDING_FILE = "audio.wav"
+        const val STOP_INFORMATION_FORM_INFORMATION = "Stop_Information_Log.txt"
 
 
         const val DETECTION_INTERVAL_IN_MILLISECONDS: Long = 60000 // 1 minute interval

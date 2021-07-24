@@ -16,6 +16,7 @@ import androidx.lifecycle.MutableLiveData
 import dev.debaleen.project20050120.MainActivity
 import dev.debaleen.project20050120.R
 import dev.debaleen.project20050120.util.Constants
+import dev.debaleen.project20050120.util.FileLogger
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,16 +47,14 @@ class AudioRecordingService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        val outputFile = File(
-            getExternalFilesDir(null),
-            "${SimpleDateFormat("dd-MM-yyyy HH-mm-ss", Locale.US).format(Date())}-audio.wav"
-        )
+        val logger =
+            FileLogger("${Constants.getCurrentDateTime("dd-MM-yyyy_HH-mm-ss")}_${Constants.AUDIO_RECORDING_FILE}")
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.DEFAULT)
             setOutputFormat(MediaRecorder.OutputFormat.AMR_WB)
             setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB)
             setAudioSamplingRate(Constants.AUDIO_SAMPLING_RATE)
-            setOutputFile(outputFile)
+            setOutputFile(logger.getOutputFile())
         }
     }
 

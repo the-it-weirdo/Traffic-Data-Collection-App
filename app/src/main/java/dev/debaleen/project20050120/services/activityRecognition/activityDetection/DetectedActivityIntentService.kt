@@ -11,9 +11,7 @@ import dev.debaleen.project20050120.util.FileLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -27,15 +25,15 @@ class DetectedActivityIntentService : JobIntentService() {
         }
     }
 
-    private lateinit var file: File
-    private val logger = FileLogger()
+    private var logger: FileLogger? = null
 
     override fun onHandleWork(intent: Intent) {
         Log.i(TAG, "onHandleWork")
         val result = ActivityRecognitionResult.extractResult(intent)
         val fileName = intent.getStringExtra(Constants.ACTIVITY_RECOGNITION_FILE)
-        file = logger.getOutputFile(fileName ?: Constants.ACTIVITY_RECOGNITION_FILE, false)
-
+        if (fileName != null) {
+            logger = FileLogger(fileName, false)
+        }
         // Get the list of the probable activities associated with the current state of the
         // device. Each activity is associated with a confidence level, which is an int between
         // 0 and 100.
@@ -58,8 +56,10 @@ class DetectedActivityIntentService : JobIntentService() {
                             )
                         },${activity.confidence}\n"
                     )
-                    logger.writeToFile(
-                        file,
+                    if (logger == null) {
+                        Log.e(TAG, "Logger is null")
+                    }
+                    logger?.writeToFile(
                         "${Constants.getCurrentDateTime()}," +
                                 "${Constants.getActivityName(activity.type)}," +
                                 "${activity.confidence}\n"
