@@ -3,13 +3,17 @@ package dev.debaleen.project20050120.util
 import android.Manifest
 import com.google.android.gms.location.ActivityTransition
 import com.google.android.gms.location.DetectedActivity
+import java.text.SimpleDateFormat
+import java.util.*
 
 class Constants {
     companion object {
 
         const val AppName = "Project20050120"
 
-        const val BASE_DIR = "Data Crowd Sourcing"
+        const val BASE_DIR = "Project20050120"
+        const val ACTIVITY_RECOGNITION_FILE = "activity_recognition_log.txt"
+
 
         const val DETECTION_INTERVAL_IN_MILLISECONDS: Long = 60000 // 1 minute interval
 
@@ -51,6 +55,19 @@ class Constants {
                 ActivityTransition.ACTIVITY_TRANSITION_EXIT -> "Exit"
                 else -> "UNKNOWN"
             }
+        }
+
+        /**
+         * Method to get the current date and time.
+         * It gives the Date and Time of the instant this method is invoked in [String] format
+         * @param pattern A [String] denoting the date and time format. Default is 'dd/MM/yyyy HH:mm:ss'
+         * @return A date time string in the given format.
+         * */
+        fun getCurrentDateTime(pattern : String = "dd/MM/yyyy HH:mm:ss") : String {
+            return SimpleDateFormat(
+                pattern,
+                Locale.US
+            ).format(Date())
         }
     }
 }

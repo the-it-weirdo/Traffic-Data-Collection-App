@@ -7,6 +7,7 @@ import androidx.core.app.JobIntentService
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
 import dev.debaleen.project20050120.util.Constants
+import dev.debaleen.project20050120.util.FileLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,9 +27,15 @@ class DetectedActivityIntentService : JobIntentService() {
         }
     }
 
+    private lateinit var file: File
+    private val logger = FileLogger()
+
     override fun onHandleWork(intent: Intent) {
         Log.i(TAG, "onHandleWork")
         val result = ActivityRecognitionResult.extractResult(intent)
+        val fileName = intent.getStringExtra(Constants.ACTIVITY_RECOGNITION_FILE)
+        file = logger.getOutputFile(fileName ?: Constants.ACTIVITY_RECOGNITION_FILE, false)
+
         // Get the list of the probable activities associated with the current state of the
         // device. Each activity is associated with a confidence level, which is an int between
         // 0 and 100.
@@ -43,22 +50,19 @@ class DetectedActivityIntentService : JobIntentService() {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     Log.i(TAG, "Writing to log..")
-                    Log.i(TAG, getExternalFilesDir(null).toString())
                     Log.i(
                         TAG,
-                        "${SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US).format(Date())}, ${
+                        "${Constants.getCurrentDateTime()},${
                             Constants.getActivityName(
                                 activity.type
                             )
-                        }, ${activity.confidence}\n"
+                        },${activity.confidence}\n"
                     )
-                    val file = File(getExternalFilesDir(null), "ActivityRecognitionLog.txt")
-                    file.appendText(
-                        "${SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US).format(Date())}, ${
-                            Constants.getActivityName(
-                                activity.type
-                            )
-                        }, ${activity.confidence}\n"
+                    logger.writeToFile(
+                        file,
+                        "${Constants.getCurrentDateTime()}," +
+                                "${Constants.getActivityName(activity.type)}," +
+                                "${activity.confidence}\n"
                     )
                 } catch (e: IOException) {
                     Log.e("Exception", "File write failed: $e")

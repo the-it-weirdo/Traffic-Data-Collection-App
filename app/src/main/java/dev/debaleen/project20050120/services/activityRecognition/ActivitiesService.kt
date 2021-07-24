@@ -16,6 +16,7 @@ import dev.debaleen.project20050120.MainActivity
 import dev.debaleen.project20050120.R
 import dev.debaleen.project20050120.services.activityRecognition.activityDetection.DetectedActivityBroadcastReceiver
 import dev.debaleen.project20050120.services.activityRecognition.activityTransition.ActivityTransitionedBroadcastReceiver
+import dev.debaleen.project20050120.util.FileLogger
 
 
 class ActivitiesService : Service() {
@@ -30,6 +31,8 @@ class ActivitiesService : Service() {
         val IsServiceRunning: LiveData<Boolean>
             get() = isServiceRunning
     }
+
+    private val logger = FileLogger()
 
     private lateinit var mIntentDetectedActivityBroadcastRcvr: Intent // for Activity Detection
     private lateinit var mIntentActivityTransitionedBroadcastRcvr: Intent // for Activity Transition
@@ -49,10 +52,17 @@ class ActivitiesService : Service() {
         super.onCreate()
         Log.i(TAG, "onCreate")
         isServiceRunning.value = true
+
+        val fileName = "${
+            Constants.getCurrentDateTime("dd-MM-yyyy_HH-mm-ss")
+        }_${Constants.ACTIVITY_RECOGNITION_FILE}"
+
         mActivityRecognitionClient = ActivityRecognitionClient(this)
 
         mIntentDetectedActivityBroadcastRcvr =
             Intent(this, DetectedActivityBroadcastReceiver::class.java)
+        mIntentDetectedActivityBroadcastRcvr.putExtra(Constants.ACTIVITY_RECOGNITION_FILE, fileName)
+
         mIntentActivityTransitionedBroadcastRcvr =
             Intent(this, ActivityTransitionedBroadcastReceiver::class.java)
 
@@ -65,6 +75,13 @@ class ActivitiesService : Service() {
             this, ActivityTransitionedReqCode, mIntentActivityTransitionedBroadcastRcvr,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
+
+        try {
+            val file = logger.getOutputFile(fileName, false)
+            logger.writeToFile(file, "TIMESTAMP,ACTIVITY,CONFIDENCE\n")
+        } catch (e: Exception) {
+            Log.e(TAG, "Activity File creation failed", e)
+        }
 
         requestActivityDetectionUpdates()
         requestActivityTransitionUpdates()
